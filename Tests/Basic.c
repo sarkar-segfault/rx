@@ -1,5 +1,4 @@
 #include <stddef.h>
-#include <stdio.h>
 
 #include "Rx/Rx.h"
 #include "Vx/Vx.h"
