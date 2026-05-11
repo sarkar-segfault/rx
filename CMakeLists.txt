@@ -4,7 +4,7 @@ project(
   Rx
   LANGUAGES C
   VERSION 0.1.0
-  HOMEPAGE_URL "https://github.com/sarkar-segfault/Rx"
+  HOMEPAGE_URL "https://codeberg.org/adhritsarkar/Rx"
   DESCRIPTION "A rendering library for simpletons and wizards alike"
 )
 
@@ -38,7 +38,7 @@ if(Rx_Testing)
 
   FetchContent_Declare(
     Vx
-    GIT_REPOSITORY https://github.com/sarkar-segfault/Vx.git
+    GIT_REPOSITORY https://codeberg.org/adhritsarkar/Vx.git
     GIT_TAG main
   )
 
