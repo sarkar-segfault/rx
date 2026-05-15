@@ -1,5 +1,11 @@
-BasedOnStyle: Google
-ColumnLimit: 100
-
+BasedOnStyle: LLVM
 IndentPPDirectives: BeforeHash
-PointerAlignment: Right
+
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<.*>'
+    Priority: 1
+
+  - Regex: '^".*"'
+    Priority: 2
