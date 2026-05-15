@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "Status.h"
+#include "Result.h"
 #include "_Expose.h"
 
 typedef struct RxDevice RxDevice;
@@ -16,10 +16,10 @@ typedef struct RxDeviceSpec {
 
 #define RxDeviceSpec_Default ((RxDeviceSpec){0})
 
-Rx__Expose RxStatus RxDevice_Create(RxDevice **device, const RxDeviceSpec spec);
+Rx__Expose RxResult RxDevice_Create(RxDevice **device, const RxDeviceSpec spec);
 
-Rx__Expose RxStatus RxDevice_GetSpec(const RxDevice *device, RxDeviceSpec *spec);
+Rx__Expose RxDeviceSpec RxDevice_GetSpec(const RxDevice *device);
 
-Rx__Expose RxStatus RxDevice_Delete(RxDevice **device);
+Rx__Expose RxResult RxDevice_Delete(RxDevice **device);
 
 #endif

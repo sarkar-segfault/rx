@@ -2,8 +2,9 @@
 #define Rx__DeviceExtraH
 
 #include <stdbool.h>
-#include "Rx/Status.h"
 
-RxStatus RxDevice_ValidationSupported(void);
+#include "Rx/Result.h"
+
+RxResult RxDevice_ValidationSupported(void);
 
 #endif

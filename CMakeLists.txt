@@ -8,7 +8,10 @@ project(
   DESCRIPTION "A rendering library for simpletons and wizards alike"
 )
 
+option(Rx_FetchDependencies "Whether to fetch dependencies; disable if they are already installed" ON)
+
 option(Rx_Testing "Whether to build tests and enable CTest integration" OFF)
+
 add_library(Rx Sources/Engine.c Sources/Device/Core.c Sources/Device/Extra.c)
 
 if(BUILD_SHARED_LIBS)
@@ -34,6 +37,7 @@ find_package(Vulkan REQUIRED)
 target_link_libraries(Rx PRIVATE Vulkan::Vulkan)
 
 if(Rx_Testing)
+  if (Rx_FetchDependencies)
   include(FetchContent)
 
   FetchContent_Declare(
@@ -43,6 +47,7 @@ if(Rx_Testing)
   )
 
   FetchContent_MakeAvailable(Vx)
+  endif()
 
   function(Rx_Test name)
       add_executable(${name} Tests/${name}.c)

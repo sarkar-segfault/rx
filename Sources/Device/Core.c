@@ -1,21 +1,23 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../Status.h"
+#include "../Result.h"
 #include "Extra.h"
-#include "Rx/Device.h"  // IWYU pragma: associated
-#include "Rx/Status.h"
+#include "Rx/Device.h" // IWYU pragma: associated
+#include "Rx/Result.h"
 
 struct RxDevice {
   VkInstance instance;
   RxDeviceSpec spec;
 };
 
-RxStatus RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
-  if (!device) return RxStatus_BadInput;
+RxResult RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
+  assert(device);
 
   *device = calloc(1, sizeof(RxDevice));
-  if (!*device) return RxStatus_AllocFailed;
+  if (!*device)
+    return RxResult_AllocFail;
 
   (*device)->spec = spec;
 
@@ -24,7 +26,8 @@ RxStatus RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
       .pApplicationName = spec.name ? spec.name : "Rx",
       .applicationVersion = VK_MAKE_VERSION(spec.major, spec.minor, spec.micro),
       .pEngineName = "Rx",
-      .engineVersion = VK_MAKE_VERSION(Rx_VersionMajor, Rx_VersionMinor, Rx_VersionMicro),
+      .engineVersion =
+          VK_MAKE_VERSION(Rx_VersionMajor, Rx_VersionMinor, Rx_VersionMicro),
       .apiVersion = VK_API_VERSION_1_0,
   };
 
@@ -41,7 +44,7 @@ RxStatus RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
       .enabledExtensionCount = sizeof(extensions) / sizeof(extensions[0]),
   };
 
-  if (RxDevice_ValidationSupported() == RxStatus_Pass) {
+  if (RxDevice_ValidationSupported().type == RxResultType_Pass) {
     const char *layers[] = {"VK_LAYER_KHRONOS_validation"};
     instinfo.enabledLayerCount = sizeof(layers) / sizeof(layers[0]);
     instinfo.ppEnabledLayerNames = layers;
@@ -50,27 +53,23 @@ RxStatus RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
   VkResult result = vkCreateInstance(&instinfo, NULL, &(*device)->instance);
   if (result != VK_SUCCESS) {
     RxDevice_Delete(device);
-    return RxStatus_FromVk(result);
+    return RxResult_VulkanFail(result);
   }
 
-  return RxStatus_Pass;
+  return RxResult_Pass;
 }
 
-RxStatus RxDevice_GetSpec(const RxDevice *device, RxDeviceSpec *spec) {
-  if (!device || !spec) return RxStatus_BadInput;
+RxDeviceSpec RxDevice_GetSpec(const RxDevice *device) {
+  assert(device);
 
-  *spec = device->spec;
-  return RxStatus_Pass;
+  return device->spec;
 }
 
-RxStatus RxDevice_Delete(RxDevice **device) {
-  if (!device || !(*device)) return RxStatus_BadInput;
-  RxStatus s = RxStatus_Pass;
+RxResult RxDevice_Delete(RxDevice **device) {
+  assert(device && *device);
+  RxResult s = RxResult_Pass;
 
-  if (!(*device)->instance) {
-    s = RxStatus_BadInput;
-  } else
-    vkDestroyInstance((*device)->instance, NULL);
+  vkDestroyInstance((*device)->instance, NULL);
 
   free(*device);
   *device = NULL;
