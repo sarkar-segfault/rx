@@ -1,10 +1,11 @@
+#include "Extra.h" // IWYU pragma: associated
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
 
 #include "../Result.h"
-#include "Extra.h" // IWYU pragma: associated
 
 RxResult RxDevice_ValidationSupported(RxDeviceSpec spec) {
 #ifndef NDEBUG

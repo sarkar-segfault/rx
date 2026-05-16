@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#include "Rx/Result.h"
 #include "Rx/DeviceSpec.h"
+#include "Rx/Result.h"
 
 RxResult RxDevice_ValidationSupported(RxDeviceSpec spec);
 

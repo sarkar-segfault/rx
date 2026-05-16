@@ -29,9 +29,9 @@ target_compile_definitions(Rx PRIVATE Rx__Build)
 target_compile_definitions(
   Rx PUBLIC
   Rx_Version="${PROJECT_VERSION}"
-  Rx_VersionMajor="${PROJECT_VERSION_MAJOR}"
-  Rx_VersionMinor="${PROJECT_VERSION_MINOR}"
-  Rx_VersionMicro="${PROJECT_VERSION_PATCH}"
+  Rx_VersionMajor=${PROJECT_VERSION_MAJOR}
+  Rx_VersionMinor=${PROJECT_VERSION_MINOR}
+  Rx_VersionMicro=${PROJECT_VERSION_PATCH}
 )
 
 target_include_directories(Rx PUBLIC Headers)

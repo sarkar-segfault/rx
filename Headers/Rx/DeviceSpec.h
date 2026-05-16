@@ -16,7 +16,8 @@ typedef struct RxDeviceSpec {
   RxHandleSpecDrop drop;
 } RxDeviceSpec;
 
-#define RxDeviceSpec_Default ((RxDeviceSpec){.make = RxHandleSpec_Make, .drop = RxHandleSpec_Drop})
+#define RxDeviceSpec_Default                                                   \
+  ((RxDeviceSpec){.make = RxHandleSpec_Make, .drop = RxHandleSpec_Drop})
 
 void *RxHandleSpec_Make(void *data, const size_t size);
 
