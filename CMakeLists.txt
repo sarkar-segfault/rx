@@ -15,9 +15,8 @@ option(Rx_Testing "Whether to build tests and enable CTest integration" OFF)
 add_library(
   Rx
   Sources/Engine.c
-  Sources/Device/Core.c
-  Sources/Device/Extra.c
   Sources/DeviceSpec.c
+  Sources/Device/Core.c
 )
 
 if(BUILD_SHARED_LIBS)
@@ -37,10 +36,6 @@ target_compile_definitions(
 target_include_directories(Rx PUBLIC Headers)
 
 target_compile_features(Rx PUBLIC c_std_99)
-
-find_package(Vulkan REQUIRED)
-
-target_link_libraries(Rx PRIVATE Vulkan::Vulkan)
 
 if(Rx_Testing)
   if (Rx_FetchDependencies)

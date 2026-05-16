@@ -21,8 +21,8 @@ typedef enum RxResultType {
   /* Failed to allocate memory for usage */
   RxResultType_AllocFail,
 
-  /* Underlying Vulkan failure */
-  RxResultType_VulkanFail,
+  /* Underlying OpenGL failure */
+  RxResultType_GlFail,
 } RxResultType;
 
 /*
