@@ -1,5 +1,5 @@
-#ifndef Rx__DeviceSpecH
-#define Rx__DeviceSpecH
+#ifndef Rx_DeviceSpecH
+#define Rx_DeviceSpecH
 
 #include <stdint.h>
 

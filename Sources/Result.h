@@ -1,5 +1,5 @@
-#ifndef Rx__InternalResultH
-#define Rx__InternalResultH
+#ifndef Rx_InternalResultH
+#define Rx_InternalResultH
 
 #include "Rx/Result.h" // IWYU pragma: export
 

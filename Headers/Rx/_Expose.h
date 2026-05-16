@@ -2,18 +2,18 @@
   Defines macros to expose public functions from the shared library across
   different platforms.
 
-  Specifically, it defines `Rx__Export`, `Rx__Extern`, and `Rx__Expose`.
+  Specifically, it defines `Rx_Export`, `Rx_Extern`, and `Rx_Expose`.
   This file is not to be included in user code.
 */
 
 // IWYU pragma: private
 // IWYU pragma: no_include
 
-#ifndef Rx__ExposeH
-#define Rx__ExposeH
+#ifndef Rx_ExposeH
+#define Rx_ExposeH
 
 /*
-  ## Macro `Rx__Export`
+  ## Macro `Rx_Export`
   Marks symbols for export if we are building as a shared library.
 
   When building a shared library with certain compilers or on certain platforms,
@@ -21,24 +21,24 @@
   macros to reliably export our symbols. On unknown systems, or if we are not
   building as shared, the macro is left blank.
 */
-#ifdef Rx__Shared
+#ifdef Rx_Shared
   #ifdef _WIN32
-    #ifdef Rx__Build
-      #define Rx__Export __declspec(dllexport)
+    #ifdef Rx_Build
+      #define Rx_Export _declspec(dllexport)
     #else
-      #define Rx__Export __declspec(dllimport)
+      #define Rx_Export _declspec(dllimport)
     #endif
-  #elif defined(__GNUC__)
-    #define Rx__Export __attribute__((visibility("default")))
+  #elif defined(_GNUC_)
+    #define Rx_Export _attribute_((visibility("default")))
   #else
-    #define Rx__Export
+    #define Rx_Export
   #endif
 #else
-  #define Rx__Export
+  #define Rx_Export
 #endif
 
 /*
-  ## Macro `Rx__Extern`
+  ## Macro `Rx_Extern`
   Marks symbols as C to make sure C++ compilers don't choke on our code.
 
   When a C++ compiler tries to compile C code, it cannot recognize the code as
@@ -54,19 +54,19 @@
   all over instead of letting it infer them.
 */
 #ifdef __cplusplus
-  #define Rx__Extern extern "C"
+  #define Rx_Extern extern "C"
 #else
-  #define Rx__Extern extern
+  #define Rx_Extern extern
 #endif
 
 /*
-  ## Macro `Rx__Expose`
-  Combines `Rx__Extern` and `Rx__Export` together to properly declare our
+  ## Macro `Rx_Expose`
+  Combines `Rx_Extern` and `Rx_Export` together to properly declare our
   symbols.
 
-  This macro combines `Rx__Extern` and `Rx__Export` together so that it is more
+  This macro combines `Rx_Extern` and `Rx_Export` together so that it is more
   convenient when defining symbols.
 */
-#define Rx__Expose Rx__Extern Rx__Export
+#define Rx_Expose Rx_Extern Rx_Export
 
 #endif

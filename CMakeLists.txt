@@ -20,10 +20,10 @@ add_library(
 )
 
 if(BUILD_SHARED_LIBS)
-  target_compile_definitions(Rx PRIVATE Rx__Shared)
+  target_compile_definitions(Rx PRIVATE Rx_Shared)
 endif()
 
-target_compile_definitions(Rx PRIVATE Rx__Build)
+target_compile_definitions(Rx PRIVATE Rx_Build)
 
 target_compile_definitions(
   Rx PUBLIC

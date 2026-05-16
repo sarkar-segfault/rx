@@ -1,5 +1,5 @@
-#ifndef Rx__H
-#define Rx__H
+#ifndef Rx_H
+#define Rx_H
 
 // IWYU pragma: begin_exports
 #include "Device.h"

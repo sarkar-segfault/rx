@@ -5,8 +5,8 @@
   indicate success or failure states.
 */
 
-#ifndef Rx__ResultH
-#define Rx__ResultH
+#ifndef Rx_ResultH
+#define Rx_ResultH
 
 /*
   Common status codes returned by library functions.
