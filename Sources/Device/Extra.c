@@ -1,13 +1,12 @@
-#include "Extra.h" // IWYU pragma: associated
-
 #include <stdint.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
 
 #include "../Result.h"
+#include "Extra.h" // IWYU pragma: associated
 
-RxResult RxDevice_ValidationSupported(void) {
+RxResult RxDevice_ValidationSupported(RxDeviceSpec spec) {
 #ifndef NDEBUG
   uint32_t count = 0;
   VkResult result = vkEnumerateInstanceLayerProperties(&count, NULL);
@@ -15,7 +14,8 @@ RxResult RxDevice_ValidationSupported(void) {
   if (result != VK_SUCCESS)
     return RxResult_VulkanFail(result);
 
-  VkLayerProperties *props = calloc(count, sizeof(VkLayerProperties));
+  VkLayerProperties *props =
+      spec.make(spec.data, count * sizeof(VkLayerProperties));
   if (!props)
     return RxResult_AllocFail;
 
@@ -24,9 +24,13 @@ RxResult RxDevice_ValidationSupported(void) {
     return RxResult_VulkanFail(result);
 
   for (uint32_t i = 0; i < count; i++) {
-    if (!strcmp(props[i].layerName, "VK_LAYER_KHRONOS_validation"))
+    if (!strcmp(props[i].layerName, "VK_LAYER_KHRONOS_validation")) {
+      spec.drop(spec.data, props);
       return RxResult_Pass;
+    }
   }
+
+  spec.drop(spec.data, props);
 #endif
 
   return RxResult_NoValidation;

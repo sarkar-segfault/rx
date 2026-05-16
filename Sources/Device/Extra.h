@@ -4,7 +4,8 @@
 #include <stdbool.h>
 
 #include "Rx/Result.h"
+#include "Rx/DeviceSpec.h"
 
-RxResult RxDevice_ValidationSupported(void);
+RxResult RxDevice_ValidationSupported(RxDeviceSpec spec);
 
 #endif

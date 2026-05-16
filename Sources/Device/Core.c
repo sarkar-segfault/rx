@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
 #include "../Result.h"
@@ -15,7 +14,7 @@ struct RxDevice {
 RxResult RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
   assert(device);
 
-  *device = calloc(1, sizeof(RxDevice));
+  *device = spec.make(spec.data, sizeof(RxDevice));
   if (!*device)
     return RxResult_AllocFail;
 
@@ -44,7 +43,7 @@ RxResult RxDevice_Create(RxDevice **device, const RxDeviceSpec spec) {
       .enabledExtensionCount = sizeof(extensions) / sizeof(extensions[0]),
   };
 
-  if (RxDevice_ValidationSupported().type == RxResultType_Pass) {
+  if (RxDevice_ValidationSupported(spec).type == RxResultType_Pass) {
     const char *layers[] = {"VK_LAYER_KHRONOS_validation"};
     instinfo.enabledLayerCount = sizeof(layers) / sizeof(layers[0]);
     instinfo.ppEnabledLayerNames = layers;
@@ -71,7 +70,7 @@ RxResult RxDevice_Delete(RxDevice **device) {
 
   vkDestroyInstance((*device)->instance, NULL);
 
-  free(*device);
+  (*device)->spec.drop((*device)->spec.data, *device);
   *device = NULL;
 
   return s;

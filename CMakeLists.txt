@@ -12,7 +12,13 @@ option(Rx_FetchDependencies "Whether to fetch dependencies; disable if they are 
 
 option(Rx_Testing "Whether to build tests and enable CTest integration" OFF)
 
-add_library(Rx Sources/Engine.c Sources/Device/Core.c Sources/Device/Extra.c)
+add_library(
+  Rx
+  Sources/Engine.c
+  Sources/Device/Core.c
+  Sources/Device/Extra.c
+  Sources/DeviceSpec.c
+)
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(Rx PRIVATE Rx__Shared)
