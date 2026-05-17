@@ -112,7 +112,13 @@ find_library(
   NO_DEFAULT_PATH
 )
 
-target_link_libraries(Rx PRIVATE ${WGPU_NATIVE_LIBRARY})
+if(WGPU_NATIVE_LIBRARY)
+  target_link_libraries(Rx PRIVATE ${WGPU_NATIVE_LIBRARY})
+elseif(WIN32)
+  message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}\\lib")
+else()
+  message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}/lib")
+endif()
 
 if(Rx_Testing)
   if (Rx_FetchDependencies)
