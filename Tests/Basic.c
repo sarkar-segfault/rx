@@ -1,26 +1,26 @@
 #include <stddef.h>
 
 #include "Rx/Rx.h"
-#include "Vx/Vx.h"
+#include "vx/vx.h"
 
 int main(void) {
   VxHandle *handle = NULL;
-  VxHandle_Create(&handle, VxHandleSpec_Default);
+  vxHandleCreate(&handle, VX_HANDLE_SPEC_DEFAULT);
 
   VxWindow *window = NULL;
-  VxWindow_Create(&window, handle, VxWindowSpec_Default);
+  vxWindowCreate(&window, handle, VX_WINDOW_SPEC_DEFAULT);
 
   VxEvent event;
 
   RxDevice *device = NULL;
   RxDevice_Create(&device, RxDeviceSpec_Default);
 
-  while (VxWindow_IsOpen(window)) {
-    VxWindow_PollEvents(window);
+  while (vxWindowIsOpen(window)) {
+    vxWindowPollEvents(window);
 
-    while (VxWindow_PopEvent(window, &event)) {
-      if (event.type == VxEvent_Close) {
-        VxWindow_Close(window);
+    while (vxWindowPopEvent(window, &event)) {
+      if (event.type == VX_EVENT_CLOSE) {
+        vxWindowClose(window);
         goto terminate;
       }
     }
@@ -29,7 +29,7 @@ int main(void) {
 terminate:
   RxDevice_Delete(&device);
 
-  VxWindow_Delete(&window);
-  VxHandle_Delete(&handle);
+  vxWindowDelete(&window);
+  vxHandleDelete(&handle);
   return 0;
 }

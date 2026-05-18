@@ -125,17 +125,17 @@ if(Rx_Testing)
     include(FetchContent)
 
     FetchContent_Declare(
-      Vx
-      GIT_REPOSITORY https://codeberg.org/adhritsarkar/Vx.git
+      vx
+      GIT_REPOSITORY https://codeberg.org/adhritsarkar/vx.git
       GIT_TAG main
     )
 
-    FetchContent_MakeAvailable(Vx)
+    FetchContent_MakeAvailable(vx)
   endif()
 
   function(Rx_Test name)
       add_executable(${name} Tests/${name}.c)
-      target_link_libraries(${name} PRIVATE Vx Rx)
+      target_link_libraries(${name} PRIVATE vx Rx)
       add_test(NAME ${name} COMMAND ${name})
   endfunction()
 
