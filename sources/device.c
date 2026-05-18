@@ -1,8 +1,9 @@
+#include "rx/device.h" // IWYU pragma: associated
+
 #include <assert.h>
 #include <stdlib.h>
 
 #include "result.h"
-#include "rx/device.h" // IWYU pragma: associated
 
 struct RxDevice {
   RxDeviceSpec spec;

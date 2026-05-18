@@ -8,6 +8,8 @@
 #ifndef RX_RESULT_H
 #define RX_RESULT_H
 
+#include "private.h"
+
 /*
   Common status codes returned by library functions.
 */
@@ -30,7 +32,7 @@ typedef enum RxResultType {
 */
 typedef struct RxResult {
   RxResultType type;
-  const char *msg;
+  RX_NOTNULL const char *msg;
 } RxResult;
 
 #endif

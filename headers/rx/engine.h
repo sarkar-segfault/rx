@@ -1,13 +1,14 @@
 #ifndef RX_ENGINE_H
 #define RX_ENGINE_H
 
-#include "result.h"
 #include "private.h"
+#include "result.h"
 
 typedef struct RxEngine RxEngine;
 
-RX_EXPORT RxResult rxEngineCreate(RxEngine **engine, void *display);
+RX_EXPORT RxResult rxEngineCreate(RX_NOTNULL RxEngine **engine,
+                                  RX_NOTNULL void *display);
 
-RX_EXPORT RxResult rxEngineDelete(RxEngine **engine);
+RX_EXPORT RxResult rxEngineDelete(RX_NOTNULL RxEngine **engine);
 
 #endif

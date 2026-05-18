@@ -5,15 +5,16 @@
 #include <stdint.h>
 
 #include "device_spec.h"
-#include "result.h"
 #include "private.h"
+#include "result.h"
 
 typedef struct RxDevice RxDevice;
 
-RX_EXPORT RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec);
+RX_EXPORT RxResult rxDeviceCreate(RX_NOTNULL RxDevice **device,
+                                  const RxDeviceSpec spec);
 
-RX_EXPORT RxDeviceSpec rxDeviceGetSpec(const RxDevice *device);
+RX_EXPORT RxDeviceSpec rxDeviceGetSpec(RX_NOTNULL const RxDevice *device);
 
-RX_EXPORT RxResult rxDeviceDelete(RxDevice **device);
+RX_EXPORT RxResult rxDeviceDelete(RX_NOTNULL RxDevice **device);
 
 #endif
