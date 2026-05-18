@@ -13,35 +13,35 @@
 // IWYU pragma: private
 // IWYU pragma: no_include
 
-#ifndef Rx_ExposeH
-#define Rx_ExposeH
+#ifndef RX_EXPOSE_H
+#define RX_EXPOSE_H
 
 /*
   Controls symbol export/import for shared libraries.
 */
-#ifdef Rx_Shared
+#ifdef RX_SHARED
   #ifdef _WIN32
-    #ifdef Rx_Build
-      #define Rx_Export _declspec(dllexport)
+    #ifdef RX_BUILD
+      #define RX_EXPOSE _declspec(dllexport)
     #else
-      #define Rx_Export _declspec(dllimport)
+      #define RX_EXPOSE _declspec(dllimport)
     #endif
   #elif defined(__GNUC__)
-    #define Rx_Export __attribute__((visibility("default")))
+    #define RX_EXPOSE __attribute__((visibility("default")))
   #else
-    #define Rx_Export
+    #define RX_EXPOSE
   #endif
 #else
-  #define Rx_Export
+  #define RX_EXPOSE
 #endif
 
 /*
   Prevents C++ name mangling when linking with C.
 */
 #ifdef __cplusplus
-  #define Rx_Extern extern "C"
+  #define RX_EXTERN extern "C"
 #else
-  #define Rx_Extern extern
+  #define RX_EXTERN extern
 #endif
 
 /*
@@ -49,6 +49,6 @@
 
   Use this on all functions that must be visible outside the shared library.
 */
-#define Rx_Expose Rx_Extern Rx_Export
+#define RX_EXPORT RX_EXTERN RX_EXPOSE
 
 #endif

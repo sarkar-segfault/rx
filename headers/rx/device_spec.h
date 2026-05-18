@@ -1,5 +1,5 @@
-#ifndef Rx_DeviceSpecH
-#define Rx_DeviceSpecH
+#ifndef RX_DEVICE_SPEC_H
+#define RX_DEVICE_SPEC_H
 
 #include <stdint.h>
 
@@ -16,11 +16,6 @@ typedef struct RxDeviceSpec {
   RxHandleSpecDrop drop;
 } RxDeviceSpec;
 
-#define RxDeviceSpec_Default                                                   \
-  ((RxDeviceSpec){.make = RxHandleSpec_Make, .drop = RxHandleSpec_Drop})
-
-void *RxHandleSpec_Make(void *data, const size_t size);
-
-void RxHandleSpec_Drop(void *data, void *ptr);
+#define RX_DEVICE_SPEC_DEFAULT ((RxDeviceSpec){0})
 
 #endif

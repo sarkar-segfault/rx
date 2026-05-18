@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include "Rx/Rx.h"
+#include "rx/rx.h"
 #include "vx/vx.h"
 
 int main(void) {
@@ -13,7 +13,7 @@ int main(void) {
   VxEvent event;
 
   RxDevice *device = NULL;
-  RxDevice_Create(&device, RxDeviceSpec_Default);
+  rxDeviceCreate(&device, RX_DEVICE_SPEC_DEFAULT);
 
   while (vxWindowIsOpen(window)) {
     vxWindowPollEvents(window);
@@ -27,7 +27,7 @@ int main(void) {
   }
 
 terminate:
-  RxDevice_Delete(&device);
+  rxDeviceDelete(&device);
 
   vxWindowDelete(&window);
   vxHandleDelete(&handle);

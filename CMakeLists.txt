@@ -1,41 +1,40 @@
 cmake_minimum_required(VERSION 3.12..4.3)
 
 project(
-  Rx
+  rx
   LANGUAGES C
   VERSION 0.1.0
-  HOMEPAGE_URL "https://codeberg.org/adhritsarkar/Rx"
+  HOMEPAGE_URL "https://codeberg.org/adhritsarkar/rx"
   DESCRIPTION "A rendering library for simpletons and wizards alike"
 )
 
-option(Rx_FetchDependencies "Whether to fetch dependencies; disable if they are already installed" ON)
+option(RX_FETCH_DEPS "Whether to fetch dependencies; disable if they are already installed" ON)
 
-option(Rx_Testing "Whether to build tests and enable CTest integration" OFF)
+option(RX_TESTING "Whether to build tests and enable CTest integration" OFF)
 
 add_library(
-  Rx
-  Sources/Engine.c
-  Sources/DeviceSpec.c
-  Sources/Device/Core.c
+  rx
+  sources/engine.c
+  sources/device.c
 )
 
 if(BUILD_SHARED_LIBS)
-  target_compile_definitions(Rx PRIVATE Rx_Shared)
+  target_compile_definitions(rx PRIVATE RX_SHARED)
 endif()
 
-target_compile_definitions(Rx PRIVATE Rx_Build)
+target_compile_definitions(rx PRIVATE RX_BUILD)
 
 target_compile_definitions(
-  Rx PUBLIC
-  Rx_Version="${PROJECT_VERSION}"
-  Rx_VersionMajor=${PROJECT_VERSION_MAJOR}
-  Rx_VersionMinor=${PROJECT_VERSION_MINOR}
-  Rx_VersionMicro=${PROJECT_VERSION_PATCH}
+  rx PUBLIC
+  RX_VERSION="${PROJECT_VERSION}"
+  RX_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+  RX_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+  RX_VERSION_MICRO=${PROJECT_VERSION_PATCH}
 )
 
-target_include_directories(Rx PUBLIC Headers)
+target_include_directories(rx PUBLIC headers)
 
-target_compile_features(Rx PUBLIC c_std_99)
+target_compile_features(rx PUBLIC c_std_99)
 
 if(WIN32)
     set(WGPU_NATIVE_OS "windows")
@@ -90,7 +89,7 @@ if(NOT EXISTS "${WGPU_NATIVE_EXTRACT_PATH}")
 
   list(GET WGPU_DOWNLOAD_STATUS 0 WGPU_DOWNLOAD_STATUS_CODE)
   if(WGPU_DOWNLOAD_STATUS_CODE EQUAL 0)
-    message(STATUS "${WGPU_NATIVE_URL} downloaded to ${WGPU_NATIVE_ARCHIVE_PATH}, with exit code ${WGPU_DOWNLOAD_STATUS_CODE}")
+    message(STATUS "${WGPU_NATIVE_URL} downloaded to ${WGPU_NATIVE_ARCHIVE_PATH}")
   else()
     message(FATAL_ERROR "${WGPU_NATIVE_URL} failed to download to ${WGPU_NATIVE_ARCHIVE_PATH}, with exit code ${WGPU_DOWNLOAD_STATUS_CODE}")
   endif()
@@ -103,7 +102,7 @@ if(NOT EXISTS "${WGPU_NATIVE_EXTRACT_PATH}")
   message(STATUS "Extracted ${WGPU_NATIVE_ARCHIVE_PATH} to ${WGPU_NATIVE_EXTRACT_PATH}")
 endif()
 
-target_include_directories(Rx PRIVATE ${WGPU_NATIVE_EXTRACT_PATH}/include)
+target_include_directories(rx PRIVATE ${WGPU_NATIVE_EXTRACT_PATH}/include)
 
 find_library(
   WGPU_NATIVE_LIBRARY
@@ -113,15 +112,15 @@ find_library(
 )
 
 if(WGPU_NATIVE_LIBRARY)
-  target_link_libraries(Rx PRIVATE ${WGPU_NATIVE_LIBRARY})
+  target_link_libraries(rx PRIVATE ${WGPU_NATIVE_LIBRARY})
 elseif(WIN32)
   message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}\\lib")
 else()
   message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}/lib")
 endif()
 
-if(Rx_Testing)
-  if (Rx_FetchDependencies)
+if(RX_TESTING)
+  if (RX_FETCH_DEPS)
     include(FetchContent)
 
     FetchContent_Declare(
@@ -133,12 +132,12 @@ if(Rx_Testing)
     FetchContent_MakeAvailable(vx)
   endif()
 
-  function(Rx_Test name)
+  function(rx_test name)
       add_executable(${name} Tests/${name}.c)
-      target_link_libraries(${name} PRIVATE vx Rx)
+      target_link_libraries(${name} PRIVATE vx rx)
       add_test(NAME ${name} COMMAND ${name})
   endfunction()
 
-  Rx_Test(Basic)
+  rx_test(Basic)
   enable_testing()
 endif()

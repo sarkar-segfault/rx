@@ -5,24 +5,24 @@
   indicate success or failure states.
 */
 
-#ifndef Rx_ResultH
-#define Rx_ResultH
+#ifndef RX_RESULT_H
+#define RX_RESULT_H
 
 /*
   Common status codes returned by library functions.
 */
 typedef enum RxResultType {
   /* Operation completed successfully */
-  RxResultType_Pass,
+  RX_RESULT_PASS,
 
   /* The specified feature was not configured */
-  RxResultType_NotConf,
+  RX_RESULT_NOT_CONF,
 
   /* Failed to allocate memory for usage */
-  RxResultType_AllocFail,
+  RX_RESULT_BAD_ALLOC,
 
   /* Underlying WebGPU failure */
-  RxResultType_WgpuFail,
+  RX_RESULT_WGPU_FAIL,
 } RxResultType;
 
 /*
