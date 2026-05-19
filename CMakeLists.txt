@@ -96,11 +96,11 @@ if(NOT EXISTS "${WGPU_EXTRACT_PATH}")
     TLS_VERIFY ON
   )
 
-  list(GET WGPU_DOWNLOAD_STATUS 0 WGPU_DOWNLOAD_STATUS_CODE)
-  if(WGPU_DOWNLOAD_STATUS_CODE EQUAL 0)
+  list(GET WGPU_DOWNLOAD_STATUS 0 WGPU_DOWNLOAD_EXIT_CODE)
+  if(WGPU_DOWNLOAD_EXIT_CODE EQUAL 0)
     message(STATUS "Finished!")
   else()
-    message(FATAL_ERROR "Failed with exit code ${WGPU_DOWNLOAD_STATUS_CODE}!")
+    message(FATAL_ERROR "Failed with exit code ${WGPU_DOWNLOAD_EXIT_CODE}!")
   endif()
 
   message(STATUS "Extracting ${WGPU_ARCHIVE_PATH} to ${WGPU_EXTRACT_PATH}")
@@ -112,37 +112,46 @@ if(NOT EXISTS "${WGPU_EXTRACT_PATH}")
   message(STATUS "Finished!")
 endif()
 
+message(STATUS "Copying ${WGPU_EXTRACT_PATH}/lib to ${CMAKE_BINARY_DIR}...")
 execute_process(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   "${WGPU_EXTRACT_PATH}/lib"
   "${CMAKE_BINARY_DIR}"
+  RESULT_VARIABLE WGPU_COPY_EXIT_CODE
 )
 
-find_library(
-  WGPU_LIBRARY
-  NAMES wgpu_native
-  PATHS "${CMAKE_BINARY_DIR}"
-  NO_DEFAULT_PATH
-)
+if(NOT WGPU_COPY_EXIT_CODE EQUAL 0)
+  message(FATAL_ERROR "Failed with exit code ${WGPU_COPY_EXIT_CODE}!")
+else()
+  message(STATUS "Finished!")
+endif()
 
-if(NOT WGPU_LIBRARY)
-  message(FATAL_ERROR "Failed to find wgpu_native library!")
+if(WIN32)
+  set(WGPU_LIBRARY "wgpu_native.dll.lib")
+elseif(APPLE)
+  set(WGPU_LIBRARY "libwgpu_native.dylib")
+elseif(UNIX)
+  set(WGPU_LIBRARY "libwgpu_native.so")
 endif()
 
 target_include_directories(rx PRIVATE "${WGPU_EXTRACT_PATH}/include")
-target_link_libraries(rx PRIVATE "${CMAKE_BINARY_DIR}/wgpu_native.dll.lib")
+target_link_libraries(rx PRIVATE "${CMAKE_BINARY_DIR}/${WGPU_LIBRARY}")
 
 if(RX_TESTING)
-    if (RX_FETCH_DEPS)
+  if (RX_FETCH_DEPS)
     include(FetchContent)
+    set(VX_URL "https://codeberg.org/adhritsarkar/vx.git")
 
     FetchContent_Declare(
       vx
-      GIT_REPOSITORY https://codeberg.org/adhritsarkar/vx.git
+      GIT_REPOSITORY "${VX_URL}"
       GIT_TAG main
+      GIT_SHALLOW ON
     )
 
+    message(STATUS "Fetching ${VX_URL} (for testing)...")
     FetchContent_MakeAvailable(vx)
+    message(STATUS "Finished!")
   endif()
 
   function(rx_test name)
