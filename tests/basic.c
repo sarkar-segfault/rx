@@ -15,6 +15,9 @@ int main(void) {
   RxDevice *device = NULL;
   rxDeviceCreate(&device, RX_DEVICE_SPEC_DEFAULT);
 
+  if (!device)
+    return 1;
+
   while (vxWindowIsOpen(window)) {
     vxWindowPollEvents(window);
 

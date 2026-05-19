@@ -8,6 +8,8 @@
 #ifndef RX_RESULT_H
 #define RX_RESULT_H
 
+#include <stddef.h>
+
 #include "private.h"
 
 /*
@@ -33,6 +35,8 @@ typedef enum RxResultType {
 typedef struct RxResult {
   RxResultType type;
   RX_NOTNULL const char *msg;
+  // 0 == null terminated
+  size_t length;
 } RxResult;
 
 #endif

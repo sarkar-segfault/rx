@@ -15,8 +15,13 @@ typedef struct RxDeviceSpec {
   RX_NULLABLE void *userdata;
   RX_NULLABLE RxHandleSpecCreate create;
   RX_NULLABLE RxHandleSpecDelete delete;
+
+  bool highPower;
+  bool compatibilityMode;
+  bool softwareRendering;
 } RxDeviceSpec;
 
-#define RX_DEVICE_SPEC_DEFAULT ((RxDeviceSpec){0})
+#define RX_DEVICE_SPEC_DEFAULT                                                 \
+  ((RxDeviceSpec){.highPower = true, .compatibilityMode = false})
 
 #endif
