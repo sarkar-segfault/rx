@@ -15,8 +15,7 @@
   (RxResult){.type = RX_RESULT_BAD_ALLOC,                                      \
              .msg = "(Rx) failed to allocate memory for usage"}
 
-#define RX_WGPU_FAIL                                                           \
-  (RxResult){.type = RX_RESULT_WGPU_FAIL,                                      \
-             .msg = "(Rx) encountered webgpu failure"}
+#define RX_WGPU_FAIL(txt)                                                      \
+  (RxResult) { .type = RX_RESULT_WGPU_FAIL, .msg = txt }
 
 #endif

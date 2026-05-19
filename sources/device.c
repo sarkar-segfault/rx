@@ -14,8 +14,8 @@ struct RxDevice {
 RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
   assert(device);
 
-  if (spec.make)
-    *device = spec.make(spec.data, sizeof(RxDevice));
+  if (spec.create)
+    *device = spec.create(spec.userdata, sizeof(RxDevice));
   else
     *device = malloc(sizeof(struct RxDevice));
 
@@ -23,17 +23,20 @@ RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
     return RX_BAD_ALLOC;
 
   (*device)->spec = spec;
+  RxResult r = RX_PASS;
 
   const WGPUInstanceDescriptor id = WGPU_INSTANCE_DESCRIPTOR_INIT;
   (*device)->inst = wgpuCreateInstance(&id);
-  if (!(*device)->inst)
-    goto wgpu_fail;
+  if (!(*device)->inst) {
+    r = RX_WGPU_FAIL("failed to create instance");
+    goto wgpuFail;
+  }
 
-  return RX_PASS;
+  return r;
 
-wgpu_fail:
+wgpuFail:
   rxDeviceDelete(device);
-  return RX_WGPU_FAIL;
+  return r;
 }
 
 RxDeviceSpec rxDeviceGetSpec(const RxDevice *device) {
@@ -47,8 +50,8 @@ RxResult rxDeviceDelete(RxDevice **device) {
   if ((*device)->inst)
     wgpuInstanceRelease((*device)->inst);
 
-  if ((*device)->spec.drop)
-    (*device)->spec.drop((*device)->spec.data, *device);
+  if ((*device)->spec.delete)
+    (*device)->spec.delete((*device)->spec.userdata, *device);
   else
     free(*device);
 
