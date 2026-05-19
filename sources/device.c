@@ -48,7 +48,7 @@ RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
   (*device)->inst = wgpuCreateInstance(&id);
   if (!(*device)->inst) {
     r = RX_WGPU_FAIL("failed to create instance", 0);
-    goto wgpuFail;
+    goto fail;
   }
 
   WGPURequestAdapterOptions rao = {
@@ -75,12 +75,12 @@ RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
 
   if (!(*device)->adapt) {
     r = RX_WGPU_FAIL(rai.sv.data, rai.sv.length);
-    goto wgpuFail;
+    goto fail;
   }
 
   return r;
 
-wgpuFail:
+fail:
   rxDeviceDelete(device);
   return r;
 }
