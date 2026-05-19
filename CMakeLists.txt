@@ -37,90 +37,103 @@ target_include_directories(rx PUBLIC headers)
 target_compile_features(rx PUBLIC c_std_99)
 
 if(WIN32)
-    set(WGPU_NATIVE_OS "windows")
+  set(WGPU_OS "windows")
 elseif(APPLE)
-    set(WGPU_NATIVE_OS "macos")
+  set(WGPU_OS "macos")
 elseif(UNIX)
-    set(WGPU_NATIVE_OS "linux")
+  set(WGPU_OS "linux")
 else()
-    message(FATAL_ERROR "Unsupported OS")
+  message(FATAL_ERROR "Unsupported OS")
 endif()
+
+message(STATUS "WGPU_OS = ${WGPU_OS}")
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
-    set(WGPU_NATIVE_ARCH "x86_64")
+  set(WGPU_ARCH "x86_64")
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
-    set(WGPU_NATIVE_ARCH "aarch64")
+  set(WGPU_ARCH "aarch64")
 else()
-    message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+  message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-set(WGPU_NATIVE_TOOLCHAIN "")
+message(STATUS "WGPU_ARCH = ${WGPU_ARCH}")
+
+set(WGPU_TOOLCHAIN "")
 
 if(WIN32)
-    if(MSVC)
-        set(WGPU_NATIVE_TOOLCHAIN "-msvc")
-    else()
-        set(WGPU_NATIVE_TOOLCHAIN "-gnu")
-    endif()
+  if(MSVC)
+    set(WGPU_TOOLCHAIN_USER "msvc")
+  else()
+    set(WGPU_TOOLCHAIN_USER "gnu")
+  endif()
+  message(STATUS "WGPU_TOOLCHAIN = ${WGPU_TOOLCHAIN_USER}")
+  set(WGPU_TOOLCHAIN "-${WGPU_TOOLCHAIN_USER}")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(WGPU_NATIVE_BUILD_TYPE "debug")
+  set(WGPU_BUILD_TYPE "debug")
 else()
-    set(WGPU_NATIVE_BUILD_TYPE "release")
+  set(WGPU_BUILD_TYPE "release")
 endif()
 
+message(STATUS "WGPU_BUILD_TYPE = ${WGPU_BUILD_TYPE}")
+
 set(
-  WGPU_NATIVE_URL
-  "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.0.0/wgpu-${WGPU_NATIVE_OS}-${WGPU_NATIVE_ARCH}${WGPU_NATIVE_TOOLCHAIN}-${WGPU_NATIVE_BUILD_TYPE}.zip"
+  WGPU_URL
+  "https://github.com/gfx-rs/wgpu-native/releases/download/v29.0.0.0/wgpu-${WGPU_OS}-${WGPU_ARCH}${WGPU_TOOLCHAIN}-${WGPU_BUILD_TYPE}.zip"
 )
 
-set(WGPU_NATIVE_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/wgpu-native.zip")
-set(WGPU_NATIVE_EXTRACT_PATH "${CMAKE_BINARY_DIR}/wgpu-native")
+set(WGPU_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/wgpu-native.zip")
+set(WGPU_EXTRACT_PATH "${CMAKE_BINARY_DIR}/wgpu-native")
 
-if(NOT EXISTS "${WGPU_NATIVE_EXTRACT_PATH}")
+if(NOT EXISTS "${WGPU_EXTRACT_PATH}")
+  message(STATUS "Downloading ${WGPU_URL} to ${WGPU_ARCHIVE_PATH}...")
   file(
     DOWNLOAD
-    ${WGPU_NATIVE_URL}
-    ${WGPU_NATIVE_ARCHIVE_PATH}
+    ${WGPU_URL}
+    ${WGPU_ARCHIVE_PATH}
     STATUS WGPU_DOWNLOAD_STATUS
     TLS_VERIFY ON
   )
 
   list(GET WGPU_DOWNLOAD_STATUS 0 WGPU_DOWNLOAD_STATUS_CODE)
   if(WGPU_DOWNLOAD_STATUS_CODE EQUAL 0)
-    message(STATUS "${WGPU_NATIVE_URL} downloaded to ${WGPU_NATIVE_ARCHIVE_PATH}")
+    message(STATUS "Finished!")
   else()
-    message(FATAL_ERROR "${WGPU_NATIVE_URL} failed to download to ${WGPU_NATIVE_ARCHIVE_PATH}, with exit code ${WGPU_DOWNLOAD_STATUS_CODE}")
+    message(FATAL_ERROR "Failed with exit code ${WGPU_DOWNLOAD_STATUS_CODE}!")
   endif()
 
+  message(STATUS "Extracting ${WGPU_ARCHIVE_PATH} to ${WGPU_EXTRACT_PATH}")
   file(
     ARCHIVE_EXTRACT
-    INPUT ${WGPU_NATIVE_ARCHIVE_PATH}
-    DESTINATION ${WGPU_NATIVE_EXTRACT_PATH}
+    INPUT ${WGPU_ARCHIVE_PATH}
+    DESTINATION ${WGPU_EXTRACT_PATH}
   )
-  message(STATUS "Extracted ${WGPU_NATIVE_ARCHIVE_PATH} to ${WGPU_NATIVE_EXTRACT_PATH}")
+  message(STATUS "Finished!")
 endif()
 
-target_include_directories(rx PRIVATE ${WGPU_NATIVE_EXTRACT_PATH}/include)
+execute_process(
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  "${WGPU_EXTRACT_PATH}/lib"
+  "${CMAKE_BINARY_DIR}"
+)
 
 find_library(
-  WGPU_NATIVE_LIBRARY
+  WGPU_LIBRARY
   NAMES wgpu_native
-  PATHS "${WGPU_NATIVE_EXTRACT_PATH}/lib"
+  PATHS "${CMAKE_BINARY_DIR}"
   NO_DEFAULT_PATH
 )
 
-if(WGPU_NATIVE_LIBRARY)
-  target_link_libraries(rx PRIVATE ${WGPU_NATIVE_LIBRARY})
-elseif(WIN32)
-  message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}\\lib")
-else()
-  message(FATAL_ERROR "Failed to find wgpu-native library in ${WGPU_NATIVE_EXTRACT_PATH}/lib")
+if(NOT WGPU_LIBRARY)
+  message(FATAL_ERROR "Failed to find wgpu_native library!")
 endif()
 
+target_include_directories(rx PRIVATE "${WGPU_EXTRACT_PATH}/include")
+target_link_libraries(rx PRIVATE "${CMAKE_BINARY_DIR}/wgpu_native.dll.lib")
+
 if(RX_TESTING)
-  if (RX_FETCH_DEPS)
+    if (RX_FETCH_DEPS)
     include(FetchContent)
 
     FetchContent_Declare(
@@ -133,9 +146,9 @@ if(RX_TESTING)
   endif()
 
   function(rx_test name)
-      add_executable(${name} Tests/${name}.c)
-      target_link_libraries(${name} PRIVATE vx rx)
-      add_test(NAME ${name} COMMAND ${name})
+    add_executable(${name} tests/${name}.c)
+    target_link_libraries(${name} PRIVATE vx rx)
+    add_test(NAME ${name} COMMAND ${name})
   endfunction()
 
   rx_test(Basic)

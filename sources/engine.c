@@ -1,4 +1,4 @@
-#include "rx/engine.h" // IWYU pragma: associated
+#include "rx/engine.h"
 
 #include "rx/result.h"
 
