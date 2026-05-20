@@ -7,16 +7,13 @@ int main(void) {
   VxHandle *handle = NULL;
   vxHandleCreate(&handle, VX_HANDLE_SPEC_DEFAULT);
 
+  RxDevice *device = NULL;
+  rxDeviceCreate(&device, RX_DEVICE_SPEC_DEFAULT);
+
   VxWindow *window = NULL;
   vxWindowCreate(&window, handle, VX_WINDOW_SPEC_DEFAULT);
 
   VxEvent event;
-
-  RxDevice *device = NULL;
-  rxDeviceCreate(&device, RX_DEVICE_SPEC_DEFAULT);
-
-  if (!device)
-    return 1;
 
   while (vxWindowIsOpen(window)) {
     vxWindowPollEvents(window);

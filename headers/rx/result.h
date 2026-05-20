@@ -35,8 +35,6 @@ typedef enum RxResultType {
 typedef struct RxResult {
   RxResultType type;
   RX_NOTNULL const char *msg;
-  // 0 == null terminated
-  size_t length;
 } RxResult;
 
 #endif
