@@ -1,11 +1,10 @@
-#include "rx/device.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <webgpu/webgpu.h>
 
 #include "result.h"
+#include "rx/device.h"
 
 struct RxDevice {
   WGPUInstance inst;

@@ -1,5 +1,4 @@
 #include "rx/engine.h"
-
 #include "rx/result.h"
 
 struct RxEngine;

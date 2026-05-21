@@ -3,6 +3,7 @@ IndentPPDirectives: BeforeHash
 
 SortIncludes: true
 IncludeBlocks: Regroup
+IncludeIsMainRegex: '$.'
 IncludeCategories:
   - Regex: '^<.*>'
     Priority: 1
