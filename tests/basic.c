@@ -13,6 +13,9 @@ int main(void) {
   VxWindow *window = NULL;
   vxWindowCreate(&window, handle, VX_WINDOW_SPEC_DEFAULT);
 
+  RxEngine *engine = NULL;
+  rxEngineCreate(&engine, device, vxWindowGetNative(window));
+
   VxEvent event;
 
   while (vxWindowIsOpen(window)) {
@@ -27,9 +30,10 @@ int main(void) {
   }
 
 terminate:
-  rxDeviceDelete(&device);
-
+  rxEngineDelete(&engine);
   vxWindowDelete(&window);
+
+  rxDeviceDelete(&device);
   vxHandleDelete(&handle);
   return 0;
 }

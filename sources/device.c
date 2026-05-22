@@ -1,18 +1,12 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <webgpu/webgpu.h>
 
 #include "result.h"
 #include "rx/device.h"
-
-struct RxDevice {
-  WGPUInstance inst;
-  WGPUAdapter adapt;
-  WGPUDevice device;
-  RxDeviceSpec spec;
-  char label[28];
-};
+#include "device.h"
 
 void rxRequestAdapter(WGPURequestAdapterStatus status, WGPUAdapter adapter,
                       WGPUStringView message, void *adapt_, void *rai_);
@@ -38,6 +32,8 @@ RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
 
   if (!*device)
     return RX_BAD_ALLOC;
+
+  memset(*device, 0, sizeof(struct RxDevice));
 
   (*device)->spec = spec;
   RxResult r = RX_PASS;

@@ -1,7 +1,7 @@
 #ifndef RX_INTERNAL_RESULT_H
 #define RX_INTERNAL_RESULT_H
 
-#include "Rx/Result.h" // IWYU pragma: export
+#include "rx/result.h" // IWYU pragma: export
 
 #define RX_PASS                                                                \
   (RxResult) {                                                                 \
