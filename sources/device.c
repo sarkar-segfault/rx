@@ -25,8 +25,8 @@ void rxHandleDeviceLost(WGPUDevice const *device, WGPUDeviceLostReason reason,
 RxResult rxDeviceCreate(RxDevice **device, const RxDeviceSpec spec) {
   assert(device);
 
-  if (spec.create)
-    *device = spec.create(spec.userdata, sizeof(RxDevice));
+  if (spec.alloc)
+    *device = spec.alloc(spec.userdata, sizeof(RxDevice));
   else
     *device = malloc(sizeof(struct RxDevice));
 
@@ -122,8 +122,8 @@ RxResult rxDeviceDelete(RxDevice **device) {
   if ((*device)->adapt)
     wgpuAdapterRelease((*device)->adapt);
 
-  if ((*device)->spec.delete)
-    (*device)->spec.delete((*device)->spec.userdata, *device);
+  if ((*device)->spec.dealloc)
+    (*device)->spec.dealloc((*device)->spec.userdata, *device);
   else
     free(*device);
 

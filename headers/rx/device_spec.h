@@ -6,15 +6,15 @@
 
 #include "private.h"
 
-typedef RX_NULLABLE void *(*RxHandleSpecCreate)(void *userdata,
+typedef RX_NULLABLE void *(*RxAllocator)(void *userdata,
                                                 const size_t size);
 
-typedef void (*RxHandleSpecDelete)(void *userdata, void *ptr);
+typedef void (*RxDeallocator)(void *userdata, void *ptr);
 
 typedef struct RxDeviceSpec {
   RX_NULLABLE void *userdata;
-  RX_NULLABLE RxHandleSpecCreate create;
-  RX_NULLABLE RxHandleSpecDelete delete;
+  RX_NULLABLE RxAllocator alloc;
+  RX_NULLABLE RxDeallocator dealloc;
 
   bool highPower;
   bool compatibilityMode;

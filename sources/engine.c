@@ -14,9 +14,9 @@ struct RxEngine {
 RxResult rxEngineCreate(RxEngine **engine, RxDevice *device, void *native) {
   assert(engine && device && native);
 
-  if (device->spec.create)
+  if (device->spec.alloc)
     *engine =
-        device->spec.create(device->spec.userdata, sizeof(struct RxEngine));
+        device->spec.alloc(device->spec.userdata, sizeof(struct RxEngine));
   else
     *engine = malloc(sizeof(struct RxEngine));
 
@@ -32,8 +32,8 @@ RxResult rxEngineCreate(RxEngine **engine, RxDevice *device, void *native) {
 RxResult rxEngineDelete(RxEngine **engine) {
   assert(engine && *engine);
 
-  if ((*engine)->spec.delete)
-    (*engine)->spec.delete((*engine)->spec.userdata, *engine);
+  if ((*engine)->spec.dealloc)
+    (*engine)->spec.dealloc((*engine)->spec.userdata, *engine);
   else
     free(*engine);
 
