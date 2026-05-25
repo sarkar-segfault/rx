@@ -34,7 +34,18 @@ target_compile_definitions(
 
 target_include_directories(rx PUBLIC headers)
 
-target_compile_features(rx PUBLIC c_std_99)
+set_target_properties(
+  rx PROPERTIES
+  C_STANDARD 99
+  C_EXTENSIONS OFF
+  C_STANDARD_REQUIRED ON
+)
+
+if(MSVC)
+  target_compile_options(rx PRIVATE /W4 /permissive-)
+else()
+  target_compile_options(rx PRIVATE -Wall -Wextra -Wpedantic)
+endif()
 
 if(WIN32)
   set(WGPU_OS "windows")

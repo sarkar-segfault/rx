@@ -1,9 +1,9 @@
 #ifndef RX_ENGINE_H
 #define RX_ENGINE_H
 
+#include "device.h"
 #include "private.h"
 #include "result.h"
-#include "device.h"
 
 typedef struct RxEngine RxEngine;
 

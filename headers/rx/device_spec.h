@@ -6,8 +6,7 @@
 
 #include "private.h"
 
-typedef RX_NULLABLE void *(*RxAllocator)(void *userdata,
-                                                const size_t size);
+typedef RX_NULLABLE void *(*RxAllocator)(void *userdata, const size_t size);
 
 typedef void (*RxDeallocator)(void *userdata, void *ptr);
 

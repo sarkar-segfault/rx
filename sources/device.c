@@ -4,9 +4,9 @@
 #include <string.h>
 #include <webgpu/webgpu.h>
 
+#include "device.h"
 #include "result.h"
 #include "rx/device.h"
-#include "device.h"
 
 void rxRequestAdapter(WGPURequestAdapterStatus status, WGPUAdapter adapter,
                       WGPUStringView message, void *adapt_, void *rai_);
@@ -162,6 +162,10 @@ void rxRequestDevice(WGPURequestDeviceStatus status, WGPUDevice device,
 void rxHandleError(WGPUDevice const *device, WGPUErrorType type,
                    WGPUStringView message, WGPU_NULLABLE void *userdata1,
                    WGPU_NULLABLE void *userdata2) {
+  (void)device;
+  (void)type;
+  (void)userdata1;
+  (void)userdata2;
   fprintf(stderr, "(rx) unhandled wgpu failure: %.*s\n", (int)message.length,
           message.data);
 }
@@ -169,6 +173,10 @@ void rxHandleError(WGPUDevice const *device, WGPUErrorType type,
 void rxHandleDeviceLost(WGPUDevice const *device, WGPUDeviceLostReason reason,
                         WGPUStringView message, WGPU_NULLABLE void *userdata1,
                         WGPU_NULLABLE void *userdata2) {
+  (void)device;
+  (void)reason;
+  (void)userdata1;
+  (void)userdata2;
   fprintf(stderr, "(rx) lost wgpu device handle: %.*s\n", (int)message.length,
           message.data);
 }
