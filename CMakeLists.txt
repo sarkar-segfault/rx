@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12..4.3)
+cmake_minimum_required(VERSION 3.18..4.3)
 
 project(
   rx
@@ -8,9 +8,9 @@ project(
   DESCRIPTION "A rendering library for simpletons and wizards alike"
 )
 
-option(RX_FETCH_DEPS "Whether to fetch dependencies; disable if they are already installed" ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-option(RX_TESTING "Whether to build tests and enable CTest integration" OFF)
+option(RX_FETCH_DEPS "Whether to fetch dependencies; disable if they are already installed" ON)
 
 add_library(
   rx
@@ -98,7 +98,7 @@ set(WGPU_ARCHIVE_PATH "${CMAKE_BINARY_DIR}/wgpu-native.zip")
 set(WGPU_EXTRACT_PATH "${CMAKE_BINARY_DIR}/wgpu-native")
 
 if(NOT EXISTS "${WGPU_EXTRACT_PATH}")
-  message(STATUS "Downloading ${WGPU_URL} to ${WGPU_ARCHIVE_PATH}...")
+  message(STATUS "Downloading ${WGPU_URL} to ${WGPU_ARCHIVE_PATH}")
   file(
     DOWNLOAD
     ${WGPU_URL}
@@ -123,7 +123,7 @@ if(NOT EXISTS "${WGPU_EXTRACT_PATH}")
   message(STATUS "Finished!")
 endif()
 
-message(STATUS "Copying ${WGPU_EXTRACT_PATH}/lib to ${CMAKE_BINARY_DIR}...")
+message(STATUS "Copying ${WGPU_EXTRACT_PATH}/lib to ${CMAKE_BINARY_DIR}")
 execute_process(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   "${WGPU_EXTRACT_PATH}/lib"
@@ -152,7 +152,7 @@ endif()
 target_include_directories(rx PRIVATE "${WGPU_EXTRACT_PATH}/include")
 target_link_libraries(rx PRIVATE "${CMAKE_BINARY_DIR}/${WGPU_LIBRARY}")
 
-if(RX_TESTING)
+if(DEFINED BUILD_TESTING AND BUILD_TESTING)
   if (RX_FETCH_DEPS)
     include(FetchContent)
     set(VX_URL "https://codeberg.org/adhritsarkar/vx.git")
@@ -164,17 +164,18 @@ if(RX_TESTING)
       GIT_SHALLOW ON
     )
 
-    message(STATUS "Fetching ${VX_URL} (for testing)...")
+    message(STATUS "Fetching ${VX_URL} (for testing)")
     FetchContent_MakeAvailable(vx)
     message(STATUS "Finished!")
   endif()
 
   function(rx_test name)
-    add_executable(${name} tests/${name}.c)
-    target_link_libraries(${name} PRIVATE vx rx)
-    add_test(NAME ${name} COMMAND ${name})
+    add_executable(rx_${name} tests/${name}.c)
+    target_link_libraries(rx_${name} PRIVATE vx rx)
+    add_test(NAME rx_${name} COMMAND rx_${name})
   endfunction()
 
-  rx_test(basic)
   enable_testing()
+
+  rx_test(basic)
 endif()
